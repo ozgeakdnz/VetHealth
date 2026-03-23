@@ -1,15 +1,13 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// schema.prisma
 
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js" // Doğrusu bu olmalı
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")   // KRİTİK: Bu satır eksikti!
+  directUrl = env("DIRECT_URL")    // KRİTİK: Bu satır eksikti!
 }
 
 enum Species {
@@ -41,7 +39,7 @@ enum MealStatus {
 }
 
 model Pet {
-  id           String         @id @default(uuid()) @db.Uuid
+  id           String        @id @default(uuid()) @db.Uuid
   name         String
   species      Species
   breed        String?
