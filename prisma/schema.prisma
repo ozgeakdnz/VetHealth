@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Species {
+  CAT
+  DOG
+  BIRD
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
+enum VaccinationStatus {
+  COMPLETED
+  PENDING
+}
+
+enum SymptomSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum MealStatus {
+  COMPLETED
+  PENDING
+}
+
+model Pet {
+  id           String         @id @default(uuid()) @db.Uuid
+  name         String
+  species      Species
+  breed        String?
+  imageUrl     String?
+  gender       Gender
+  birthDate    DateTime?
+  weight       Float?
+  ownerId      String
+  vaccinations Vaccination[]
+  symptomLogs  SymptomLog[]
+  nutritions   Nutrition[]
+}
+
+model Vaccination {
+  id       String            @id @default(uuid()) @db.Uuid
+  petId    String            @db.Uuid
+  pet      Pet               @relation(fields: [petId], references: [id], onDelete: Cascade)
+  name     String
+  date     DateTime
+  nextDate DateTime?
+  status   VaccinationStatus
+  notes    String?
+}
+
+model SymptomLog {
+  id          String          @id @default(uuid()) @db.Uuid
+  petId       String          @db.Uuid
+  pet         Pet             @relation(fields: [petId], references: [id], onDelete: Cascade)
+  symptom     String
+  description String?
+  severity    SymptomSeverity
+  createdAt   DateTime        @default(now())
+}
+
+model Nutrition {
+  id         String     @id @default(uuid()) @db.Uuid
+  petId      String     @db.Uuid
+  pet        Pet        @relation(fields: [petId], references: [id], onDelete: Cascade)
+  foodName   String
+  amount     String
+  frequency  Int
+  feedTime   String     @default("08:30")
+  status     MealStatus @default(PENDING)
+  notes      String?
+  createdAt  DateTime   @default(now())
+}
