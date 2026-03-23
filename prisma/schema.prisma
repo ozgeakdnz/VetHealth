@@ -1,13 +1,10 @@
-// schema.prisma
-
 generator client {
-  provider = "prisma-client-js" // Doğrusu bu olmalı
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")   // KRİTİK: Bu satır eksikti!
-  directUrl = env("DIRECT_URL")    // KRİTİK: Bu satır eksikti!
+  provider = "postgresql"
 }
 
 enum Species {
